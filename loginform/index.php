@@ -1,3 +1,34 @@
+<?php
+    // Creates database automatically 
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "logindb";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Read SQL file
+    $sql = file_get_contents('logindb.sql');
+
+    // Execute SQL script
+    if ($conn->multi_query($sql)) {
+        do {
+            // Store first result set
+            if ($result = $conn->store_result()) {
+                $result->free();
+            }
+        } while ($conn->more_results() && $conn->next_result());
+    }
+
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
